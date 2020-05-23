@@ -6,6 +6,33 @@ $subject = $_POST['subject'];
 $content="From: $name \n Email: $email \n Message: $message";
 $recipient = "verni.tapang@gmail.com";
 $mailheader = "From: $email \r\n";
-mail($recipient, $subject, $content, $mailheader) or die("Error!");
-echo "Email sent!";
+
+try
+{
+    $emailText = "You have new message from contact form\n=============================\n";
+    foreach ($_POST as $key => $value) {
+        if (isset($fields[$key])) {
+            $emailText .= "$fields[$key]: $value\n";
+        }
+    }
+
+    mail($recipient, $subject, $content, $mailheader);
+
+    echo "Email Sent!";
+}
+catch (\Exception $e)
+{
+    $responseArray = array('type' => 'danger', 'message' => $errorMessage);
+}
+
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+    $encoded = json_encode($responseArray);
+
+    header('Content-Type: application/json');
+
+    echo $encoded;
+}
+else {
+    echo $responseArray['message'];
+}
 ?>
