@@ -7,8 +7,7 @@ $content="From: $name \n Email: $email \n Message: $message";
 $recipient = "verni.tapang@gmail.com";
 $mailheader = "From: $email \r\n";
 
-try
-{
+try {
     $emailText = "You have new message from contact form\n=============================\n";
     foreach ($_POST as $key => $value) {
         if (isset($fields[$key])) {
@@ -17,11 +16,9 @@ try
     }
 
     mail($recipient, $subject, $content, $mailheader);
-
-    echo "Email Sent!";
+    $responseArray = array('type' => 'success', 'message' => $okMessage);
 }
-catch (\Exception $e)
-{
+catch (\Exception $e) {
     $responseArray = array('type' => 'danger', 'message' => $errorMessage);
 }
 
@@ -29,10 +26,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQ
     $encoded = json_encode($responseArray);
 
     header('Content-Type: application/json');
-
     echo $encoded;
-}
-else {
+} else {
     echo $responseArray['message'];
 }
 ?>
